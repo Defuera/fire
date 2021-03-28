@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:fire/model/historical_data_api.dart';
+import 'package:fire/model/historical_data_model.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final api = Api();
@@ -11,8 +12,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   @override
   Stream<HomeState> mapEventToState(event) async* {
     if (event is Init) {
-      final result = api.getHistoricalData('TSLA');
-      print(result);
+      final result = await api.getHistoricalData('TSLA');
+      yield HomeState(historicalData: result);
     } else if (event is UpdateSymbol) {
     } else if (event is UpdateAmount) {
     } else if (event is UpdateCurrency) {
@@ -20,7 +21,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 }
 
-class HomeState {}
+class HomeState {
+
+  final HistoricalData? historicalData;
+  HomeState({this.historicalData});
+
+}
 
 abstract class HomeEvent {}
 
